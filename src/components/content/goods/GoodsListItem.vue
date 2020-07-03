@@ -1,9 +1,9 @@
 <template>
-<div class="goods-item">
-  <img :src="goodsItem.show.img" alt="">
+<div class="goods-item" @click="itemClick">
+  <img :src="showImage" alt="" @load="itemImageLoad">
   <div class="goods-info">
       <p>{{goodsItem.title}}</p>
-    <span class="price">{{goodsItem.price}}</span>
+    <span class="price">￥{{goodsItem.price}}</span>
     <span class="collect">{{goodsItem.cfav}}</span>
   </div>
   </div>
@@ -17,14 +17,32 @@ goodsItem: {
     type:Object,
     default(){
         return{}
-    }
+    },
+
 }
+},
+computed:{
+showImage() {
+  return this.goodsItem.image||this.goodsItem.show.img
+}
+},
+methods:{
+  itemImageLoad(){
+    //通过路径判断该路径来决定发送出去的事件
+    if(this.$route.path.indexOf('/home')){
+      this.$bus.$emit('itemImageLoad')
+    }else if(this.$route.path.indexOf('/detail')){
+    this.$bus.$emit('detailItemImageLoad')}
+  },
+  itemClick(){
+    this.$router.push('/detail/'+ this.goodsItem.iid)
+  }
 }
 
 }
 </script>
 
-<style>
+<style scoped>
 .goods-item {
     padding-bottom: 40px;
     position: relative;
@@ -62,7 +80,7 @@ goodsItem: {
     position: relative;
   }
 
-  /* .goods-info .collect::before {
+  .goods-info .collect::before {
     content: '';
     position: absolute;
     left: -15px;
@@ -70,5 +88,5 @@ goodsItem: {
     width: 14px;
     height: 14px;
     background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
-  } */
+  }
 </style>

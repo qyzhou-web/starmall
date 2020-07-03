@@ -3,19 +3,22 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll" 
-    :probe-type="3" 
-    @topScroll="topScroll"
-    :pull-up-load='true'
-    @pullUpUp='loadMore'
+    <tab-control ref="tabControl1" class="tab-control" @tabClick="tabClick" v-show=" isTabFixed"/>
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @topScroll="topScroll"
+      :pull-up-load="true"
+      @pullUpUp="loadMore"
     >
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners" @isImageFinshed="isImageFinshed"></home-swiper>
       <recommend-views :recommends="recommends" />
       <feature-view />
-      <tab-control class="tab-control" @tabClick="tabClick" />
+      <tab-control ref="tabControl2" class="tab-control" @tabClick="tabClick" />
       <goods-list :goods="showGoodsList"></goods-list>
     </scroll>
-    <back-top @click.native="backClick" v-show="isShowTop"></back-top>
+    <back-top @click.native="backTop" v-show="showBackTop"></back-top>
   </div>
 </template>
 
@@ -26,9 +29,12 @@ import TabControl from "components/content/tabControl/TabControl.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
 import BackTop from "components/content/backTop/BackTop.vue";
 
+import {backTopMixin} from 'common/mixin.js'
+
 import HomeSwiper from "./childcomps/HomeSwiper";
 import RecommendViews from "./childcomps/RecommendView";
 import FeatureView from "./childcomps/FeatureView";
+
 import { getHomeMultidata, getHomeGoods } from "network/home";
 export default {
   name: "Home",
@@ -43,6 +49,7 @@ export default {
     RecommendViews,
     FeatureView
   },
+  mixins:[backTopMixin],
   computed: {
     showGoodsList() {
       return this.goods[this.currentType].list;
@@ -58,7 +65,9 @@ export default {
         sell: { page: 1, list: [] }
       },
       currentType: "pop",
-      isShowTop: false
+      isTabFixed: false,
+      tabOffsetTop: 0,
+      saveY:0
     };
   },
   created() {
@@ -67,8 +76,31 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
+  mounted() {
+    const refresh = this.debounce(this.$refs.scroll.refresh, 400);
+    this.$bus.$on("itemImageLoad", () => {
+      refresh();
+    })},
+    activated(){
+       this.$refs.scroll.refresh()
+      this.$refs.scroll.scrollTo(0,this.saveY,0)
+      
+  
+  },
+  deactivated(){
+    this.saveY = this.$refs.scroll.getScrollY()
+  },
   methods: {
     //事件监听相关的方法
+    debounce(func, delay) {
+      let timer = null;
+      return function(...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          func.apply(this, args);
+        }, delay);
+      };
+    },
     tabClick(index) {
       switch (index) {
         case 0:
@@ -81,15 +113,18 @@ export default {
           this.currentType = "sell";
           break;
       }
-    },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
+      this.$refs.tabControl1.currentIndex = index
+      this.$refs.tabControl2.currentIndex = index
     },
     topScroll(position) {
-      this.isShowTop = -(position.y) > 2000;
+      this.showBackTop = -position.y > 2000;
+      this.isTabFixed = -position.y > this.tabOffsetTop;
     },
-    loadMore(){
-      this.getHomeGoods(this.currentType)
+    loadMore() {
+      this.getHomeGoods(this.currentType);
+    },
+    isImageFinshed() {
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     },
 
     //调用的获取数据方法
@@ -104,7 +139,7 @@ export default {
       getHomeGoods(type, page).then(res => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
-        this.$refs.scroll.finishPullUp()
+        this.$refs.scroll.finishPullUp();
       });
     }
   }

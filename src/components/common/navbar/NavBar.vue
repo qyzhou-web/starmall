@@ -13,13 +13,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .nav-bar {
     display: flex;
     height: 44px;
     line-height: 44px;
     text-align: center;
-    background-color:pink;
 }
 .left {
  width: 60px;

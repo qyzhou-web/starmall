@@ -3,7 +3,7 @@
   <div class="tab-bar-item" @click='itemClick()'>
       <div v-if="!isActive"><slot name="tab-bar-item"></slot></div>
       <div v-else><slot name="tab-bar-item-active"></slot></div>
-      <div><slot name="tab-bar-text"></slot></div>
+      <div :class="{'active':isActive}"><slot name="tab-bar-text"></slot></div>
   </div>
 </template>
 
@@ -16,9 +16,7 @@ computed:{
     isActive(){
         return this.$route.path.indexOf(this.path)!==-1
     },
-    activeStyle(){
-        return this.isActive ? {color: this.activeColor}:{}
-    }
+   
 },
 methods :{
     itemClick(){
@@ -28,7 +26,7 @@ methods :{
 }
 </script>
 
-<style>
+<style scoped>
  .tab-bar-item {
       flex: 1;
       text-align: center;
@@ -41,5 +39,8 @@ methods :{
       margin-top: 3px;
       vertical-align: middle;
       margin-bottom: 2px;
+  }
+  .active{
+   color:pink
   }
 </style>
