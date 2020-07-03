@@ -10,7 +10,8 @@
    ##### 3.使用better-scroll完成了滑动（并解决了滑动过程中容易出现卡顿的bug）
    ##### 4.点击具体商品可以跳转到详情页
 
-<img src="./src/assets/img/readme/首页.jpg" alt="img" style="zoom:50%;" />
+<img src="https://user-images.githubusercontent.com/63336139/86478731-569e5480-bd7d-11ea-929f-bb83354e5e21.jpg" alt="img" style="zoom:50%;" />
+https://user-images.githubusercontent.com/63336139/86478731-569e5480-bd7d-11ea-929f-bb83354e5e21.jpg
 
 
 
