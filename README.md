@@ -22,13 +22,13 @@
 
 <img src="https://user-images.githubusercontent.com/63336139/86562678-ab1c1c80-bf95-11ea-8f49-8609191e2dc3.png" alt="img" style="zoom:30%;" />
 
-   #### 购物车
+#### 购物车
    ##### 1.点击按钮可以实现购物车的选择和不选择
    ##### 2.底部有全选按钮，当购物车商品全选中时购物车会自动选中全选按钮
    ##### 3.可以根据选中商品的价钱和数量自动的结算出总价格
 
 <img src="https://user-images.githubusercontent.com/63336139/86562279-06014400-bf95-11ea-99a0-d327ca0b73a9.png" alt="img" style="zoom:30%;" />
-  ### 个人中心
+###  个人中心
 
 <img src="https://user-images.githubusercontent.com/63336139/86562285-08639e00-bf95-11ea-934c-22c20ea75053.png" alt="img" style="zoom:30%;" />
 
