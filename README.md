@@ -1,6 +1,5 @@
 # star-mall(星星街商城）
 
-####  本项目根据coderwhy老师vue学习视频完成，感谢coderwhy老师
 
 ## 实现功能
 #### 主页
